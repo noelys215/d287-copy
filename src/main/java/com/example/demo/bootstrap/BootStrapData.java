@@ -55,11 +55,11 @@ public class BootStrapData implements CommandLineRunner {
 
     private void addSampleInventory() {
         /* Add sample parts */
-        createAndSaveOutsourcedPart("Neck", 50.0, 10, "Neck Supplier Co.");
-        createAndSaveOutsourcedPart("Fretboard", 30.0, 20, "Fretboard Supplies Ltd.");
-        createAndSaveOutsourcedPart("Body", 100.0, 15, "Guitar Bodies Inc.");
-        createAndSaveOutsourcedPart("Pickup", 75.0, 25, "Pickups International");
-        createAndSaveOutsourcedPart("Tuning Machine", 45.0, 30, "Tuners LLC");
+        createAndSaveOutsourcedPart("Neck", 50.0, 10, 5, 5, "Neck Supplier Co.");
+        createAndSaveOutsourcedPart("Fretboard", 30.0, 20, 5, 5, "Fretboard Supplies Ltd.");
+        createAndSaveOutsourcedPart("Body", 100.0, 15, 5, 5, "Guitar Bodies Inc.");
+        createAndSaveOutsourcedPart("Pickup", 75.0, 25, 5, 5, "Bare Knuckle Pickups Ltd");
+        createAndSaveOutsourcedPart("Tuning Machine", 45.0, 30, 5, 5, "Sperzel USA Tuners");
 
         /* Add sample products */
         createAndSaveProduct("Stratocaster", 700.0, 5);
@@ -69,11 +69,13 @@ public class BootStrapData implements CommandLineRunner {
         createAndSaveProduct("Jazzmaster", 720.0, 5);
     }
 
-    private void createAndSaveOutsourcedPart(String name, double price, int inventory, String companyName) {
+    private void createAndSaveOutsourcedPart(String name, double price, int inventory, int minInv, int maxInv, String companyName) {
         OutsourcedPart part = new OutsourcedPart();
         part.setName(name);
         part.setPrice(price);
         part.setInv(inventory);
+        part.setMinInv(minInv);
+        part.setMaxInv(maxInv);
         part.setCompanyName(companyName);
         outsourcedPartRepository.save(part);
     }

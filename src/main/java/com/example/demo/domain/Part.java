@@ -10,15 +10,12 @@ import java.util.Set;
 
 /**
  *
- *
- *
- *
  */
 @Entity
 @ValidDeletePart
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="part_type",discriminatorType = DiscriminatorType.INTEGER)
-@Table(name="Parts")
+@DiscriminatorColumn(name = "part_type", discriminatorType = DiscriminatorType.INTEGER)
+@Table(name = "Parts")
 public abstract class Part implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,18 +26,26 @@ public abstract class Part implements Serializable {
     @Min(value = 0, message = "Inventory value must be positive")
     int inv;
 
+    // Task G
+    private int minInv;
+    @Min(value = 0, message = "Maximum inventory must be non-negative")
+    private int maxInv;
+
     @ManyToMany
-    @JoinTable(name="product_part", joinColumns = @JoinColumn(name="part_id"),
-            inverseJoinColumns=@JoinColumn(name="product_id"))
-    Set<Product> products= new HashSet<>();
+    @JoinTable(name = "product_part", joinColumns = @JoinColumn(name = "part_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    Set<Product> products = new HashSet<>();
 
     public Part() {
     }
 
-    public Part(String name, double price, int inv) {
+    // Task G - Added min and max fields
+    public Part(String name, double price, int inv, int minInv, int maxInv) {
         this.name = name;
         this.price = price;
         this.inv = inv;
+        this.minInv = minInv;
+        this.maxInv = maxInv;
     }
 
     public Part(long id, String name, double price, int inv) {
@@ -90,9 +95,33 @@ public abstract class Part implements Serializable {
         this.products = products;
     }
 
-    public String toString(){
+    public String toString() {
         return this.name;
     }
+
+    //Task G
+    public int getMinInv() {
+        return minInv;
+    }
+
+    public void setMinInv(int minInv) {
+        this.minInv = minInv;
+    }
+
+    public int getMaxInv() {
+        return maxInv;
+    }
+
+    public void setMaxInv(int maxInv) {
+        this.maxInv = maxInv;
+    }
+
+    // Method to check inventory validity
+    public boolean isInventoryValid() {
+        return inv >= minInv && inv <= maxInv;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
