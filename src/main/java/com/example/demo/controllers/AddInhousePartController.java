@@ -40,11 +40,17 @@ public class AddInhousePartController {
             return "InhousePartForm";
         }
 
-        // Check if inventory is valid
+
+        // Use isInventoryValid() method from Part class
         if (!part.isInventoryValid()) {
-            theBindingResult.rejectValue("inv", "error.part", "Inventory must be between minimum and maximum values.");
+            if (part.getInv() < part.getMinInv()) {
+                theBindingResult.rejectValue("inv", "error.part.inv.tooLow", "Inventory cannot be less than the minimum required (" + part.getMinInv() + ").");
+            } else if (part.getInv() > part.getMaxInv()) {
+                theBindingResult.rejectValue("inv", "error.part.inv.tooHigh", "Inventory cannot exceed the maximum allowed (" + part.getMaxInv() + ").");
+            }
             return "InhousePartForm";
         }
+
         InhousePartService repo = context.getBean(InhousePartServiceImpl.class);
         InhousePart ip = repo.findById((int) part.getId());
         if (ip != null) part.setProducts(ip.getProducts());

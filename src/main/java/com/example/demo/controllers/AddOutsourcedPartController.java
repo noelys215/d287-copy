@@ -41,10 +41,14 @@ public class AddOutsourcedPartController {
             return "OutsourcedPartForm";
         }
 
-        // Inventory validation
+        // Use isInventoryValid() method from Part class
         if (!part.isInventoryValid()) {
-            bindingResult.rejectValue("inv", "error.part", "Inventory must be between minimum and maximum values.");
-            return "OutsourcedPartForm";
+            if (part.getInv() < part.getMinInv()) {
+                bindingResult.rejectValue("inv", "error.part.inv.tooLow", "Inventory cannot be less than the minimum required (" + part.getMinInv() + ").");
+            } else if (part.getInv() > part.getMaxInv()) {
+                bindingResult.rejectValue("inv", "error.part.inv.tooHigh", "Inventory cannot exceed the maximum allowed (" + part.getMaxInv() + ").");
+            }
+            return "InhousePartForm";
         }
 
         OutsourcedPartService repo = context.getBean(OutsourcedPartServiceImpl.class);
